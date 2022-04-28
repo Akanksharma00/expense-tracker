@@ -20,10 +20,17 @@ const ContactDetails = (props) => {
                 displayName: name,
                 photoUrl: photo,
                 returnSecureToken: true
-            })
+            }),
+            headers:{
+                'Content-Type': 'application/json'
+            }
         }).then(res => {
             if(res.ok){
                 res.json().then((data)=>{
+                    console.log(data);
+                })
+            }else{
+                res.json().then(data => {
                     console.log(data);
                 })
             }
@@ -46,7 +53,7 @@ const ContactDetails = (props) => {
                 <div>
                     <label htmlFor="photo">Profile Photo URL:</label>
                     <input 
-                        type='text'
+                        type='file'
                         placeholder='Enter you profile pic here'
                         id='photo'
                         ref={photoRef}

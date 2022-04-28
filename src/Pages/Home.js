@@ -1,16 +1,25 @@
 import React from 'react';
-import ContactDetails from './ContactDetails';
+import { useHistory, Link } from 'react-router-dom';
+
+import ContactDetails from '../Pages/ContactDetails';
 
 const Home = (props) => {
+    const history = useHistory();
+
+    const completeProfileHandler = () => {
+        history.replace('/contactDetails');
+    }
+
     return(
     <section>
         <h2>Welcome to Expense Tracker!!!</h2>
         <p>Your profile is incomplete
             <span>
-                <button>Complete Profile</button>
+                <a href='#' onClick={completeProfileHandler}>
+                    Complete Profile
+                </a>
             </span>
         </p>
-        <ContactDetails />
     </section>);
 };
 

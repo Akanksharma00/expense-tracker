@@ -7,6 +7,7 @@ import SignUp from './Components/auth/SignUp';
 import Login from './Components/auth/Login';
 import Navbar from './Components/Layout/Navbar';
 import AuthContext from './store/auth-context';
+import ContactDetails from './Pages/ContactDetails';
 
 const App = () => {
   const authCtx = useContext(AuthContext);
@@ -21,6 +22,7 @@ const App = () => {
         {isLoggedIn && <Home />}
         {!isLoggedIn && <Redirect to='/login'/>}
       </Route>
+      <Route path='/contactDetails'><ContactDetails /></Route>
       <Route path='/signup'><SignUp /></Route>
       <Route path='/login'><Login /></Route>
       <Route path='*'><Redirect to='/login'/></Route>
