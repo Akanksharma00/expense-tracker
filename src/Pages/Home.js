@@ -1,14 +1,43 @@
-import React from 'react';
+import React,{useEffect, useContext} from 'react';
 import { useHistory, Link } from 'react-router-dom';
-
-import ContactDetails from '../Pages/ContactDetails';
+import AuthContext from '../store/auth-context';
+import UserContext from "../store/user-context";
 
 const Home = (props) => {
     const history = useHistory();
+    const authCtx = useContext(AuthContext);
+    const userCtx = useContext(UserContext);
 
     const completeProfileHandler = () => {
         history.replace('/contactDetails');
     }
+
+    useEffect(()=>{
+        const token = authCtx.token;
+        fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCIheej22JapOE7YBVvQYHobUAdZzutWwk',{
+            method:'POST',
+            body: JSON.stringify({
+                idToken: token
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((res)=>{
+            if(res.ok){
+                res.json().then((data)=>{
+                    console.log(data.users[0]);
+                    userCtx.name = data.users[0].displayName
+                    userCtx.email = data.users[0].email
+                    userCtx.profilePhoto = data.users[0].photoUrl
+                })
+            }else{
+                res.json().then((data)=>{
+                    console.log(data);
+                })
+            }
+        });
+    },[]);
+
 
     return(
     <section>
@@ -20,6 +49,10 @@ const Home = (props) => {
                 </a>
             </span>
         </p>
+        <img src={userCtx.profilePhoto} alt='Profile Pic'/>
+        <p><span>Name: </span>{userCtx.name}</p>
+        <p><span>Email: </span>{userCtx.email}</p>
+        
     </section>);
 };
 

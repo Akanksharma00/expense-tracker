@@ -1,8 +1,11 @@
 import React,{useRef,useContext} from "react";
 import AuthContext from "../store/auth-context";
+import UserContext from "../store/user-context";
 
 const ContactDetails = (props) => {
     const authCtx = useContext(AuthContext);
+    const userCtx = useContext(UserContext);
+    
     const nameRef = useRef();
     const photoRef = useRef();
 
