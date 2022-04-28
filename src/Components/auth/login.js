@@ -1,16 +1,22 @@
-import React,{useRef, useContext} from 'react';
-import { useHistory, Redirect } from 'react-router-dom';
+import React,{useRef, useContext, useState} from 'react';
+import { useHistory } from 'react-router-dom';
 import AuthContext from '../../store/auth-context';
 
 import style from './Login.module.css';
 
 const Login = (props) => {
+    const [forgetPassword, setForgetPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+
     const authCtx = useContext(AuthContext);
+
     const history = useHistory();
+
     const enteredEmailRef = useRef();
     const enteredPasswordRef = useRef();
+    const forgetPasswordEmailRef = useRef();
 
-    const submitHandler = (event) => {
+    const loginSubmitHandler = (event) => {
         event.preventDefault();
 
         const email = enteredEmailRef.current.value;
@@ -41,33 +47,102 @@ const Login = (props) => {
         });
     }
 
+    const forgetPasswordHandler = () => {
+        setForgetPassword(true);
+    }
+
+    const signUpHandler = () => {
+        history.replace('/signup');
+    }
+
+    const forgetPasswordSubmitHandler = (event) => {
+        event.preventDefault();
+        setLoading(true);
+        const forgetEmail = forgetPasswordEmailRef.current.value;
+
+        fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCIheej22JapOE7YBVvQYHobUAdZzutWwk',{
+            method: 'POST',
+            body: JSON.stringify({
+                requestType: 'PASSWORD_RESET',
+                email: forgetEmail
+            }),
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        }).then((res)=> {
+            setLoading(false);
+            if(res.ok){
+                console.log(res);
+                history.replace('/signup');
+            }else{
+                res.json().then((data)=>{
+                    const errMessage= data.error.message;
+                    alert(errMessage);
+                })
+            }
+        })
+    }
 
     return(
         <section className={style.loginSection}>
-            <form onSubmit={submitHandler} className={style['loginSection-form']}>
+            {!forgetPassword && <div>
+            <form onSubmit={loginSubmitHandler} className={style['loginSection-form']}>
                 <h1>Login</h1>
-                <input 
-                    className={style['loginSection-form__input']}
-                    type='email'
-                    placeholder='Email'
-                    id='emailLogin' 
-                    ref={enteredEmailRef}
-                    required
-                />
-                <input 
-                    className={style['loginSection-form__input']}
-                    type='password'
-                    placeholder='Password'
-                    id='passwordLogin'
-                    ref={enteredPasswordRef}
-                    required
-                />
-                <button>Login</button>
                 <div>
-                    <a href='#'>Forgot Password</a>
+                    <input 
+                        className={style['loginSection-form__input']}
+                        type='email'
+                        placeholder='Email'
+                        id='emailLogin' 
+                        ref={enteredEmailRef}
+                        required
+                    />
+                    <input 
+                        className={style['loginSection-form__input']}
+                        type='password'
+                        placeholder='Password'
+                        id='passwordLogin'
+                        ref={enteredPasswordRef}
+                        required
+                    />
+                    <div>
+                        <a href='#' onClick={forgetPasswordHandler}>Forgot Password</a>
+                    </div>
+                    <button>Login</button>
                 </div>
-            </form>
-            <button>Don't have an account? Sign up</button>
+                </form>
+
+                <div>
+                    <p>Don't have an account? 
+                        <span><a href='#' onClick={signUpHandler}>Sign up</a></span>
+                    </p>
+                </div>
+
+                </div>}
+                
+                {loading && <p>Loading...</p>}
+
+                {forgetPassword && !loading && <form onSubmit={forgetPasswordSubmitHandler}>
+                    <p>Enter the email with which you have registered</p>
+                    <input 
+                        className={style['loginSection-form__input']}
+                        type='email'
+                        placeholder='Email'
+                        ref={forgetPasswordEmailRef}
+                    />
+                    <button>Send Link</button>
+                    <div>
+                        <p>Already a user?
+                            <span>
+                                <a href='/login'>Login</a>
+                            </span>
+                        </p>
+                    </div>
+                </form>}
+
+                
+            
+            
         </section>
     );
 };
