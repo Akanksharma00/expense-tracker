@@ -1,5 +1,7 @@
 import React,{useRef} from "react";
 
+import style from './SignUp.module.css';
+
 const SignUp = (props) => {
     const enteredEmailRef = useRef();
     const enteredPasswordRef = useRef();
@@ -44,10 +46,11 @@ const SignUp = (props) => {
     }
 
     return(
-        <section>
-            <h1>SignUp</h1>
-            <form onSubmit={submitHandler}>
+        <section className={style.signUp}>
+            <form onSubmit={submitHandler} className={style['signUp-form']}>
+                <h1>SignUp</h1>
                 <input 
+                    className={style['signUp__input']}
                     type='email' 
                     placeholder='Email' 
                     id='email' 
@@ -55,6 +58,7 @@ const SignUp = (props) => {
                     ref={enteredEmailRef}
                 />
                 <input 
+                    className={style['signUp__input']}
                     type='password' 
                     placeholder='Password' 
                     id='password'
@@ -62,6 +66,7 @@ const SignUp = (props) => {
                     ref={enteredPasswordRef}
                 /> 
                 <input 
+                    className={style['signUp__input']}
                     type='password' 
                     placeholder='Confirm Password'
                     id='confirmPassword' 

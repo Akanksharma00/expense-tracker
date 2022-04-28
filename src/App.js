@@ -1,20 +1,29 @@
-import React from 'react';
-import {Route} from 'react-router-dom';
+import React,{useContext} from 'react';
+import {Route, Redirect} from 'react-router-dom';
 import './App.css';
 
+import Home from './Pages/Home';
 import SignUp from './Components/auth/SignUp';
-import Login from './Components/auth/login';
-import Dummy from './Components/dummy';
-import Navbar from './Components/Navbar';
+import Login from './Components/auth/Login';
+import Navbar from './Components/Layout/Navbar';
+import AuthContext from './store/auth-context';
 
 const App = () => {
+  const authCtx = useContext(AuthContext);
+
+  const isLoggedIn = authCtx.isLoggedIn;
+
   return (
     <body>
-      <Navbar />
       <h1>Expense Tracker</h1>
+      <Navbar />
+      <Route path='/home'>
+        {isLoggedIn && <Home />}
+        {!isLoggedIn && <Redirect to='/login'/>}
+      </Route>
       <Route path='/signup'><SignUp /></Route>
       <Route path='/login'><Login /></Route>
-      <Route path='/dummy'><Dummy /></Route>
+      <Route path='*'><Redirect to='/login'/></Route>
     </body>
   );
 }

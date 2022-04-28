@@ -1,7 +1,11 @@
-import React,{useRef} from 'react';
-import { useHistory } from 'react-router-dom';
+import React,{useRef, useContext} from 'react';
+import { useHistory, Redirect } from 'react-router-dom';
+import AuthContext from '../../store/auth-context';
+
+import style from './Login.module.css';
 
 const Login = (props) => {
+    const authCtx = useContext(AuthContext);
     const history = useHistory();
     const enteredEmailRef = useRef();
     const enteredPasswordRef = useRef();
@@ -22,12 +26,12 @@ const Login = (props) => {
         }).then(res => {
             if(res.ok){
                 res.json().then((data)=>{
+                    history.replace('/home');
                     console.log(data);
                     const token = data.idToken;
-                    localStorage('Token',token);
+                    authCtx.login(token);
                 })
                 console.log('User logged in!');
-                history.replace('/dummy');
             }else(
                 res.json().then((data)=>{
                     const errMessage = data.error.message;
@@ -37,11 +41,13 @@ const Login = (props) => {
         });
     }
 
+
     return(
-        <section>
-            <h1>Login</h1>
-            <form onSubmit={submitHandler}>
+        <section className={style.loginSection}>
+            <form onSubmit={submitHandler} className={style['loginSection-form']}>
+                <h1>Login</h1>
                 <input 
+                    className={style['loginSection-form__input']}
                     type='email'
                     placeholder='Email'
                     id='emailLogin' 
@@ -49,6 +55,7 @@ const Login = (props) => {
                     required
                 />
                 <input 
+                    className={style['loginSection-form__input']}
                     type='password'
                     placeholder='Password'
                     id='passwordLogin'
@@ -56,7 +63,11 @@ const Login = (props) => {
                     required
                 />
                 <button>Login</button>
+                <div>
+                    <a href='#'>Forgot Password</a>
+                </div>
             </form>
+            <button>Don't have an account? Sign up</button>
         </section>
     );
 };
