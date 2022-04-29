@@ -38,6 +38,25 @@ const Home = (props) => {
         });
     },[]);
 
+    const verifyEmailHandler = (event) => {
+        event.preventDefault();
+        const token = authCtx.token;
+
+        fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCIheej22JapOE7YBVvQYHobUAdZzutWwk',{
+            method: 'POST',
+            body: JSON.stringify({
+                requestType: 'VERIFY_EMAIL',
+                idToken: token
+            }),
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        }).then((res)=> {
+            res.json().then((data)=>{
+                console.log(data);
+            })
+        });
+    }
 
     return(
     <section>
@@ -49,6 +68,10 @@ const Home = (props) => {
                 </a>
             </span>
         </p>
+
+        <div>
+            <button onClick={verifyEmailHandler}>Verify Email</button>
+        </div>
         <img src={userCtx.profilePhoto} alt='Profile Pic'/>
         <p><span>Name: </span>{userCtx.name}</p>
         <p><span>Email: </span>{userCtx.email}</p>
