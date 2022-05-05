@@ -1,16 +1,24 @@
-import React from 'react';
+import React,{useState} from 'react';
 
 const userContext = React.createContext({
     name: '',
     email: '',
     profilePhoto: '',
+    updateUserData: (name) => {}
 });
 
-export const userContextProvider = (props) => {
+export const UserContextProvider = (props) => {
+    const [name, setName] = useState('');
+
+    const updateUserData = (name) => {
+        setName(name);
+    }
+
     const userData = {
-        name: '',
+        name: name,
         email: '',
-        profilePhoto: ''
+        profilePhoto: '',
+        updateUserDate: updateUserData
     }
 
     return(

@@ -26,9 +26,7 @@ const Home = (props) => {
             if(res.ok){
                 res.json().then((data)=>{
                     console.log(data.users[0]);
-                    userCtx.name = data.users[0].displayName
-                    userCtx.email = data.users[0].email
-                    userCtx.profilePhoto = data.users[0].photoUrl
+                    userCtx.updateUserData(data.user[0].displayName);
                 })
             }else{
                 res.json().then((data)=>{

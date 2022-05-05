@@ -1,0 +1,29 @@
+.expenses{
+    position: relative;
+    display: block;
+    text-align: center;
+    width: 80%;
+    margin: auto;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.expenses-form{
+    width: 80%;
+    margin: auto;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #ccc;
+}
+
+.expenses-form__input{
+    position: relative;
+    display: inline;
+    margin-left: 10px;
+}
+
+.expenses-form__btn{
+    width: 70%;
+    margin-top: 10px;
+}
