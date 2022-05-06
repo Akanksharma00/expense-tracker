@@ -1,14 +1,17 @@
 import React,{useRef, useContext, useState} from 'react';
 import { useHistory } from 'react-router-dom';
-import AuthContext from '../../store/auth-context';
+// import AuthContext from '../../store/auth-context';
+import {useDispatch} from 'react-redux';
 
 import style from './Login.module.css';
+import { authActions } from '../../store/authReducer';
 
 const Login = (props) => {
+    const dispatch = useDispatch();
     const [forgetPassword, setForgetPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const authCtx = useContext(AuthContext);
+    // const authCtx = useContext(AuthContext);
 
     const history = useHistory();
 
@@ -33,9 +36,10 @@ const Login = (props) => {
             if(res.ok){
                 res.json().then((data)=>{
                     history.replace('/home');
-                    console.log(data);
+                    console.log("login data: ",data);
                     const token = data.idToken;
-                    authCtx.login(token);
+                    // authCtx.login(token);
+                    dispatch(authActions.login(token));
                 })
                 console.log('User logged in!');
             }else(

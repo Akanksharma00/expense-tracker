@@ -1,5 +1,6 @@
 import React,{useContext} from 'react';
 import {Route, Redirect} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 import './App.css';
 
 import Home from './Pages/Home';
@@ -11,9 +12,10 @@ import ContactDetails from './Pages/ContactDetails';
 import Expenses from './Pages/Expenses';
 
 const App = () => {
-  const authCtx = useContext(AuthContext);
+  // const authCtx = useContext(AuthContext);
+  // const isLoggedIn = authCtx.isLoggedIn;
 
-  const isLoggedIn = authCtx.isLoggedIn;
+  const isLoggedIn = useSelector(state => state.isLoggedIn);
 
   return (
     <body>

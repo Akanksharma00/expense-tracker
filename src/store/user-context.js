@@ -11,6 +11,7 @@ export const UserContextProvider = (props) => {
     const [name, setName] = useState('');
 
     const updateUserData = (name) => {
+        console.log('Name: ',name);
         setName(name);
     }
 
