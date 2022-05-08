@@ -60,7 +60,8 @@ const Expenses = () => {
         setCategory(e.target.value);
     }
 
-    useEffect(async () => {
+    useEffect(() => {
+        const getData = async () => {
         const response = await fetch('https://expense-tracker-9958d-default-rtdb.firebaseio.com/expenses.json');
             const data = await response.json();
             console.log(data);
@@ -77,6 +78,8 @@ const Expenses = () => {
             }
 
             setExpenses(expensesList);
+        }
+        getData();
     },[]);
 
     return(
