@@ -13,13 +13,14 @@ import store from './store/index';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <AuthContextProvider>
-  //   <UserContextProvider>
+    
     <Provider store={store}>
+      <UserContextProvider>
       <BrowserRouter>
         <App />
       </BrowserRouter>
+      </UserContextProvider>
     </Provider>
-  //   </UserContextProvider>
   // </AuthContextProvider>
   
 );

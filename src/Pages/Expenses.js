@@ -1,46 +1,93 @@
-import React,{useRef, useState} from 'react';
+import React,{useEffect, useRef, useState} from 'react';
 
 import style from './Expenses.module.css';
 
-const expenses = [
-    {
-        id: 'e1',
-        description: 'Milk',
-        category: 'Grocery',
-        amount: 200
-    }
-]
-
 const Expenses = () => {
-    const [category, setCategory] = useState('');
+    const [expenses, setExpenses] = useState([]);
+    const [category, setCategory] = useState('Food');
 
     const enteredDescriptionRef = useRef();
-    const enteredCategoryRef = useRef();
     const enteredAmountRef = useRef();
 
-    const submitHandler = (event) => {
+    const submitHandler = async (event) => {
         event.preventDefault();
 
-        const category = enteredCategoryRef;
-        // const description = enteredDescriptionRef.current.value;
-        // const amount = enteredAmountRef.current.value;
+        const description = enteredDescriptionRef.current.value;
+        const amount = enteredAmountRef.current.value;
 
-        console.log( category);
+        const expenseData = {
+            category: category,
+            description: description,
+            amount:amount
+        }
 
-        // fetch('https://expense-tracker-9958d-default-rtdb.firebaseio.com/expenses');
+        // setExpenses([...expenses,expenseData]);
+
+        const response = await fetch('https://expense-tracker-9958d-default-rtdb.firebaseio.com/expenses.json',
+        {
+            method: 'POST',
+            body: JSON.stringify(expenseData),
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        });
+        const res = await response;
+        if(res.ok){
+            console.log('Expense added to db');
+            const response = await fetch('https://expense-tracker-9958d-default-rtdb.firebaseio.com/expenses.json');
+            const data = await response.json();
+            console.log(data);
+
+            const expensesList = [];
+
+            for(const key in data){
+                expensesList.push({
+                    id: key,
+                    category: data[key].category,
+                    description: data[key].description,
+                    amount: data[key].amount
+                });
+            }
+
+            console.log('expenseList: ',expensesList);
+
+            setExpenses(expensesList);
+        }
     }
 
     const selectHandler = (e) => {
         e.preventDefault();
-        setCategory(e);
+        setCategory(e.target.value);
     }
+
+    useEffect(async () => {
+        const response = await fetch('https://expense-tracker-9958d-default-rtdb.firebaseio.com/expenses.json');
+            const data = await response.json();
+            console.log(data);
+
+            const expensesList = [];
+
+            for(const key in data){
+                expensesList.push({
+                    id: key,
+                    category: data[key].category,
+                    description: data[key].description,
+                    amount: data[key].amount
+                });
+            }
+
+            setExpenses(expensesList);
+    },[]);
 
     return(
         <section className={style.expenses}>
             <h1>Expenses</h1>
             <form className={style['expenses-form']} onSubmit={submitHandler}>
-            <select className={style['expenses-form__input']} onSelect={selectHandler}>
-                    <option value="Food">Food</option>
+                <select 
+                    className={style['expenses-form__input']} 
+                    value={category}
+                    onChange={selectHandler}>
+                    <option value="Food" selected>Food</option>
                     <option value="Clothing">Clothing</option>
                     <option value="Footwear">Footwear</option>
                     <option value="Bags">Bags</option>
@@ -55,12 +102,14 @@ const Expenses = () => {
                     type='text'
                     placeholder='Description'
                     ref={enteredDescriptionRef}
+                    required= 'true'
                 />
                 <input 
                     className={style['expenses-form__input']}
                     type='number'
                     placeholder='Amount Spent'
                     ref={enteredAmountRef}
+                    required='true'
                 />
                 <button className={style['expenses-form__btn']}>Add Expense</button>
             </form>
@@ -73,8 +122,9 @@ const Expenses = () => {
                         <th>Amount</th>
                     </tr>
                     {expenses.map((e)=>{
+                        console.log('e: ', e);
                         return(
-                            <tr>
+                            <tr key={e.id}>
                                 <td>{e.description}</td>
                                 <td>{e.category}</td>
                                 <td>{e.amount}</td>

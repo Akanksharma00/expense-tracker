@@ -28,8 +28,8 @@ const Home = (props) => {
         }).then((res)=>{
             if(res.ok){
                 res.json().then((data)=>{
-                    console.log(data.users[0].displayName);
-                    // userCtx.updateUserData(data.users[0].displayName);
+                    console.log(data.users[0]);
+                    userCtx.updateUserData(data.users[0].displayName,data.users[0].email);
                 })
             }else{
                 res.json().then((data)=>{

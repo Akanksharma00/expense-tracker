@@ -4,22 +4,24 @@ const userContext = React.createContext({
     name: '',
     email: '',
     profilePhoto: '',
-    updateUserData: (name) => {}
+    updateUserData: (name,email) => {}
 });
 
 export const UserContextProvider = (props) => {
     const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
 
-    const updateUserData = (name) => {
+    const updateUserData = (name,email) => {
         console.log('Name: ',name);
         setName(name);
+        setEmail(email);
     }
 
     const userData = {
         name: name,
-        email: '',
+        email: email,
         profilePhoto: '',
-        updateUserDate: updateUserData
+        updateUserData: updateUserData
     }
 
     return(

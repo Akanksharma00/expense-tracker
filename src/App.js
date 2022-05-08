@@ -7,7 +7,7 @@ import Home from './Pages/Home';
 import SignUp from './Components/auth/SignUp';
 import Login from './Components/auth/Login';
 import Navbar from './Components/Layout/Navbar';
-import AuthContext from './store/auth-context';
+// import AuthContext from './store/auth-context';
 import ContactDetails from './Pages/ContactDetails';
 import Expenses from './Pages/Expenses';
 
