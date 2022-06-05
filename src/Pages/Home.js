@@ -1,15 +1,21 @@
 import React,{useEffect, useContext} from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { userActions } from '../store/userReducer';
+
 // import AuthContext from '../store/auth-context';
-import UserContext from "../store/user-context";
+// import UserContext from "../store/user-context";
 
 const Home = (props) => {
     const history = useHistory();
     // const authCtx = useContext(AuthContext);
-    const userCtx = useContext(UserContext);
+    // const userCtx = useContext(UserContext);
 
-    const token = useSelector(state => state.token);
+    const dispatch = useDispatch();
+    const token = useSelector(state => state.auth.token);
+    const name = useSelector(state => state.user.name);
+    const email = useSelector(state => state.user.email);
 
     const completeProfileHandler = () => {
         history.replace('/contactDetails');
@@ -29,7 +35,8 @@ const Home = (props) => {
             if(res.ok){
                 res.json().then((data)=>{
                     console.log(data.users[0]);
-                    userCtx.updateUserData(data.users[0].displayName,data.users[0].email);
+                    // userCtx.updateUserData(data.users[0].displayName,data.users[0].email);
+                    dispatch(userActions.updateUserData({name: data.users[0].displayName, email: data.users[0].email}));
                 })
             }else{
                 res.json().then((data)=>{
@@ -38,26 +45,6 @@ const Home = (props) => {
             }
         });
     },[]);
-
-    // const verifyEmailHandler = (event) => {
-    //     event.preventDefault();
-    //     const token = token;
-
-    //     fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCIheej22JapOE7YBVvQYHobUAdZzutWwk',{
-    //         method: 'POST',
-    //         body: JSON.stringify({
-    //             requestType: 'VERIFY_EMAIL',
-    //             idToken: token
-    //         }),
-    //         headers:{
-    //             'Content-Type': 'application/json'
-    //         }
-    //     }).then((res)=> {
-    //         res.json().then((data)=>{
-    //             console.log(data);
-    //         })
-    //     });
-    // }
 
     return(
     <section>
@@ -70,13 +57,9 @@ const Home = (props) => {
             </span>
         </p>
 
-        {/* <div>
-            <button onClick={verifyEmailHandler}>Verify Email</button>
-        </div> */}
-
-        <img src={userCtx.profilePhoto} alt='Profile Pic'/>
-        <p><span>Name: </span>{userCtx.name}</p>
-        <p><span>Email: </span>{userCtx.email}</p>
+        {/* <img src={userCtx.profilePhoto} alt='Profile Pic'/> */}
+        <p><span>Name: </span>{name}</p>
+        <p><span>Email: </span>{email}</p>
         
     </section>);
 };

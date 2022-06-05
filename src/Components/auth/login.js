@@ -1,15 +1,18 @@
 import React,{useRef, useContext, useState} from 'react';
 import { useHistory } from 'react-router-dom';
 // import AuthContext from '../../store/auth-context';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import style from './Login.module.css';
 import { authActions } from '../../store/authReducer';
 
 const Login = (props) => {
-    const dispatch = useDispatch();
     const [forgetPassword, setForgetPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const dispatch = useDispatch();
+    const token = useSelector(state => state.auth.token);
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
     // const authCtx = useContext(AuthContext);
 
@@ -19,6 +22,7 @@ const Login = (props) => {
     const enteredPasswordRef = useRef();
     const forgetPasswordEmailRef = useRef();
 
+    //Login Handler
     const loginSubmitHandler = (event) => {
         event.preventDefault();
 
@@ -38,6 +42,7 @@ const Login = (props) => {
                     history.replace('/home');
                     console.log("login data: ",data);
                     const token = data.idToken;
+                    localStorage.setItem('token', token);
                     // authCtx.login(token);
                     dispatch(authActions.login(token));
                 })
@@ -143,10 +148,7 @@ const Login = (props) => {
                         </p>
                     </div>
                 </form>}
-
-                
-            
-            
+         
         </section>
     );
 };

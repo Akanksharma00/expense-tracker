@@ -1,12 +1,25 @@
 import React,{useEffect, useRef, useState} from 'react';
+import { CSVLink } from 'react-csv';
+import { useDispatch, useSelector } from 'react-redux';
+import { expensesActions } from '../store/expensesReducer';
 
 import style from './Expenses.module.css';
 
 const Expenses = () => {
-    const [expenses, setExpenses] = useState([]);
-    const [category, setCategory] = useState('Food');
-    const [isEditing, setIsEditing] = useState(false);
-    const [selectedId, setSelectedId] = useState();
+    // const [expenses, setExpenses] = useState([]);
+    // const [category, setCategory] = useState('Food');
+    // const [isEditing, setIsEditing] = useState(false);
+    // const [selectedId, setSelectedId] = useState();
+    // const [totalExpense, setTotalExpense] = useState(0);
+    // const [activatePremium, setActivatePremium] = useState(false);
+
+    const dispatch = useDispatch();
+    const expenses = useSelector(state => state.expenses.expenses);
+    const category = useSelector(state => state.expenses.category);
+    const isEditing = useSelector(state => state.expenses.isEditing);
+    const selectedId = useSelector(state => state.expenses.selectedId);
+    const totalExpense = useSelector(state => state.expenses.totalExpense);
+    const activatePremium = useSelector(state =>state.expenses.activatePremium);
 
     const enteredDescriptionRef = useRef();
     const enteredAmountRef = useRef();
@@ -14,7 +27,7 @@ const Expenses = () => {
     const getData = async() => {
         const response = await fetch('https://expense-tracker-9958d-default-rtdb.firebaseio.com/expenses.json');
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
 
             const expensesList = [];
 
@@ -27,9 +40,10 @@ const Expenses = () => {
                 });
             }
 
-            console.log('expenseList: ',expensesList);
-
-            setExpenses(expensesList);
+            // console.log('expenseList: ',expensesList);
+            // setExpenses(expensesList);
+            dispatch(expensesActions.setExpenses(expensesList));
+            
     }
 
     const submitHandler = async (event) => {
@@ -61,12 +75,14 @@ const Expenses = () => {
 
     const selectHandler = (e) => {
         e.preventDefault();
-        setCategory(e.target.value);
+        // setCategory(e.target.value);
+        dispatch(expensesActions.setCategory(e.target.value));
     }
 
     useEffect(() => {
         getData();
-    },[]);
+        getTotalExpense();
+    },[expenses,totalExpense]);
 
     const deleteExpenseHandler = async (id) => {
         const res = await fetch(`https://expense-tracker-9958d-default-rtdb.firebaseio.com/expenses/${id}.json`,{
@@ -84,14 +100,16 @@ const Expenses = () => {
 
 
     const editExpenseHandler = async (id) => {
-        setIsEditing(true);
+        // setIsEditing(true);
+        dispatch(expensesActions.setIsEditing(true));
         const expenseIndex = expenses.findIndex(expense => expense.id === id);
         const expenseData = expenses[expenseIndex];
         console.log(expenseData);
 
         enteredDescriptionRef.current.value = expenseData.description;
         enteredAmountRef.current.value = expenseData.amount;
-        setSelectedId(id);
+        // setSelectedId(id);
+        dispatch(expensesActions.setSelectedId(id));
     }
 
     const submitEditHandler = async () => {
@@ -108,8 +126,10 @@ const Expenses = () => {
 
         console.log('Updated Expense Data: ',updatedExpenseData);
 
-        setIsEditing(false);
-        setSelectedId();
+        // setIsEditing(false);
+        dispatch(expensesActions.setIsEditing(false));
+        // setSelectedId();
+        dispatch(expensesActions.setSelectedId());
 
         const response = await fetch(`https://expense-tracker-9958d-default-rtdb.firebaseio.com/expenses/${selectedId}.json`,{
             method: 'PUT',
@@ -124,6 +144,27 @@ const Expenses = () => {
             getData();
         }
     }
+
+    const getTotalExpense = () => {
+        let totalAmount = 0 ;
+        expenses.forEach((e)=>{
+            totalAmount = totalAmount + parseInt(e.amount);
+        })
+        // console.log(totalAmount);
+        // setTotalExpense(totalAmount);
+        dispatch(expensesActions.setTotalExpense(totalAmount));
+        if(totalAmount>=10000){
+            // setActivatePremium(true);
+            dispatch(expensesActions.setActivatePremium(true));
+        }else{
+            // setActivatePremium(false);
+            dispatch(expensesActions.setActivatePremium(false));
+        }
+    }
+
+    // const expenseDownload = document.getElementById('expenseDownload');
+    // const blob1 = new Blob(expenseData,{type:'csv'});
+    // expenseDownload.href = URL.createObjectURL(blob1);
 
     return(
         <section className={style.expenses}>
@@ -162,6 +203,10 @@ const Expenses = () => {
             </form>
 
             <div>
+                {activatePremium && <button>Activate Premium</button>}
+            </div>
+
+            <div>
                 <table>
                     <tr>
                         <th>Description</th>
@@ -180,7 +225,16 @@ const Expenses = () => {
                             </tr>
                         );
                     })}
+                    <tr>
+                        <td>{totalExpense}</td>
+                        {/* <td><button onClick={getTotalExpense}>Total Expense</button></td> */}
+                    </tr>
                 </table>
+            </div>
+
+            <div>
+                {/* {activatePremium && <a id='expenseDownload' download='Expenses.csv'>Download Expenses</a>} */}
+                {activatePremium && <CSVLink data={expenses} filename='Expenses.csv'>Download Expenses</CSVLink>}
             </div>
         </section>
     )

@@ -1,13 +1,15 @@
 import React,{useRef,useContext} from "react";
-import {useSelector} from 'react-redux';
-import AuthContext from "../store/auth-context";
-import UserContext from "../store/user-context";
+import {useSelector, useDispatch} from 'react-redux';
+
+import { userActions } from "../store/userReducer";
+
+// import UserContext from "../store/user-context";
 
 const ContactDetails = (props) => {
-    // const authCtx = useContext(AuthContext);
-    const userCtx = useContext(UserContext);
+    // const userCtx = useContext(UserContext);
     
-    const token = useSelector(state => state.token);
+    const dispatch = useDispatch();
+    const token = useSelector(state => state.auth.token);
     
     const nameRef = useRef();
     const photoRef = useRef();
@@ -15,7 +17,6 @@ const ContactDetails = (props) => {
     const submitHandler = (event) => {
         event.preventDefault();
 
-        // const idToken = authCtx.token;
         const name = nameRef.current.value;
         const photo = photoRef.current.value;
 
@@ -34,7 +35,8 @@ const ContactDetails = (props) => {
             if(res.ok){
                 res.json().then((data)=>{
                     console.log(data);
-                    userCtx.updateUserData(data.displayName);
+                    // userCtx.updateUserData(data.displayName);
+                    dispatch(userActions.updateUserName({name:data.displayName}));
                 })
             }else{
                 res.json().then(data => {

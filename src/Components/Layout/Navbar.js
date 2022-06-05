@@ -10,7 +10,7 @@ import style from './Navbar.module.css';
 const Navbar = (props) => {
     // const authCtx = useContext(AuthContext);
     const dispatch = useDispatch();
-    const isLoggedIn = useSelector(state => state.isLoggedIn);
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
     // const isLoggedIn = authCtx.isLoggedIn;
 
     const logoutHandler = () => {
