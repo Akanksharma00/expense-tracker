@@ -10,6 +10,20 @@
     border-radius: 10px;
 }
 
+.darkExpenses{
+    background-color: black;
+    color: white;
+    position: relative;
+    display: block;
+    text-align: center;
+    width: 80%;
+    margin: auto;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
 .expenses-form{
     width: 80%;
     margin: auto;

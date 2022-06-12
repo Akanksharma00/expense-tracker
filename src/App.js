@@ -18,7 +18,7 @@ const App = () => {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
   return (
-    <body>
+    <div>
       <h1>Expense Tracker</h1>
       <Navbar />
       <Route path='/home'>
@@ -33,7 +33,7 @@ const App = () => {
       <Route path='/signup'><SignUp /></Route>
       <Route path='/login'><Login /></Route>
       <Route path='*'><Redirect to='/login'/></Route>
-    </body>
+    </div>
   );
 }
 

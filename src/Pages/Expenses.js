@@ -2,6 +2,7 @@ import React,{useEffect, useRef, useState} from 'react';
 import { CSVLink } from 'react-csv';
 import { useDispatch, useSelector } from 'react-redux';
 import { expensesActions } from '../store/expensesReducer';
+import { themeActions } from '../store/themeReducer';
 
 import style from './Expenses.module.css';
 
@@ -20,6 +21,7 @@ const Expenses = () => {
     const selectedId = useSelector(state => state.expenses.selectedId);
     const totalExpense = useSelector(state => state.expenses.totalExpense);
     const activatePremium = useSelector(state =>state.expenses.activatePremium);
+    const darkTheme = useSelector(state => state.theme.darkTheme);
 
     const enteredDescriptionRef = useRef();
     const enteredAmountRef = useRef();
@@ -159,15 +161,16 @@ const Expenses = () => {
         }else{
             // setActivatePremium(false);
             dispatch(expensesActions.setActivatePremium(false));
+            dispatch(themeActions.darkTheme(false));
         }
     }
 
-    // const expenseDownload = document.getElementById('expenseDownload');
-    // const blob1 = new Blob(expenseData,{type:'csv'});
-    // expenseDownload.href = URL.createObjectURL(blob1);
+    const activatePremiumHandler = () => {
+        dispatch(themeActions.darkTheme(true));
+    }
 
     return(
-        <section className={style.expenses}>
+        <section className={darkTheme ? style.darkExpenses : style.expenses}>
             <h1>Expenses</h1>
             <form className={style['expenses-form']} onSubmit={submitHandler}>
                 <select 
@@ -203,7 +206,7 @@ const Expenses = () => {
             </form>
 
             <div>
-                {activatePremium && <button>Activate Premium</button>}
+                {activatePremium && <button onClick={activatePremiumHandler}>Activate Premium</button>}
             </div>
 
             <div>
@@ -233,7 +236,6 @@ const Expenses = () => {
             </div>
 
             <div>
-                {/* {activatePremium && <a id='expenseDownload' download='Expenses.csv'>Download Expenses</a>} */}
                 {activatePremium && <CSVLink data={expenses} filename='Expenses.csv'>Download Expenses</CSVLink>}
             </div>
         </section>

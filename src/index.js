@@ -13,7 +13,6 @@ import store from './store/index';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <AuthContextProvider>
-    
     <Provider store={store}>
       <UserContextProvider>
       <BrowserRouter>

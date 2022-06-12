@@ -3,7 +3,7 @@ import {NavLink, Redirect} from 'react-router-dom';
 import { useSelector, useDispatch} from 'react-redux';
 // import AuthContext from '../../store/auth-context';
 import { authActions } from '../../store/authReducer';
-
+import { themeActions } from '../../store/themeReducer';
 
 import style from './Navbar.module.css';
 
@@ -11,11 +11,18 @@ const Navbar = (props) => {
     // const authCtx = useContext(AuthContext);
     const dispatch = useDispatch();
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const darkTheme = useSelector(state => state.theme.darkTheme);
+    const activateTheme = useSelector(state => state.theme.activateTheme);
+    const activatePremium = useSelector(state => state.expenses.activatePremium);
     // const isLoggedIn = authCtx.isLoggedIn;
 
     const logoutHandler = () => {
         // authCtx.logout();
         dispatch(authActions.logout());
+    }
+
+    const toggleThemeHandler = () => {
+        dispatch(themeActions.toggleTheme());
     }
 
     return(
@@ -34,7 +41,10 @@ const Navbar = (props) => {
                     {!isLoggedIn && <NavLink to='/login'>Login</NavLink>}
                     {isLoggedIn && <button onClick={logoutHandler}>Logout</button>}
                 </li>
+                
+                { activateTheme && <button onClick={toggleThemeHandler}>{darkTheme ? 'Light' : 'Dark'}</button>}
             </ul>
+            
         </nav>
     );
 };
