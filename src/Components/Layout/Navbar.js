@@ -42,7 +42,7 @@ const Navbar = (props) => {
                     {isLoggedIn && <button onClick={logoutHandler}>Logout</button>}
                 </li>
                 
-                { activateTheme && <button onClick={toggleThemeHandler}>{darkTheme ? 'Light' : 'Dark'}</button>}
+                {isLoggedIn && activateTheme && <button onClick={toggleThemeHandler}>{darkTheme ? 'Light' : 'Dark'}</button>}
             </ul>
             
         </nav>

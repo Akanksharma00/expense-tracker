@@ -20,8 +20,6 @@ const SignUp = (props) => {
             confirmPassword: confirmPassword
         }
 
-        console.log(data);
-
         fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCIheej22JapOE7YBVvQYHobUAdZzutWwk',{
             method: 'POST',
             body: JSON.stringify({

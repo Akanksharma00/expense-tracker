@@ -210,7 +210,8 @@ const Expenses = () => {
             </div>
 
             <div>
-                <table>
+                <center>
+                <table className={style['expenseTable']}>
                     <tr>
                         <th>Description</th>
                         <th>Category</th>
@@ -228,11 +229,13 @@ const Expenses = () => {
                             </tr>
                         );
                     })}
-                    <tr>
-                        <td>{totalExpense}</td>
-                        {/* <td><button onClick={getTotalExpense}>Total Expense</button></td> */}
-                    </tr>
+                    {/* <tr>
+                        <td> Total Expense:: {totalExpense}</td>
+                    </tr> */}
                 </table>
+                </center>
+                <hr id={style['separator']} />
+                <p className={style['totalExpense']}>Total Expense: {totalExpense}</p>
             </div>
 
             <div>

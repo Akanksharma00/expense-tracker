@@ -41,3 +41,18 @@
     width: 70%;
     margin-top: 10px;
 }
+
+.totalExpense{
+    /* position: relative; */
+    /* float: left; */
+    margin-left: 20px;
+    margin-top: 0;
+}
+
+#separator{
+    width: 50%;
+}
+
+.expenseTable{
+    margin:20px;
+}
